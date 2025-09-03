@@ -135,7 +135,7 @@ const config = {
     },
     // API configuration for sending emails
     api: {
-      baseURL: `http://localhost:3000`,
+      baseURL: `https://i-love-you-v2-api.onrender.com/`,
       // Configure this based on your development port (check server/app.js or .env.PORT) and update this to your live backend URL after deployment
 
       sendEmailEndpoint: "/send-email", // Endpoint for sending emails
