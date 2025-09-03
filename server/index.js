@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
@@ -9,37 +8,15 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Allowed origins (pwede mong dagdagan kung kailangan)
-const allowedOrigins = [
-  "http://localhost:5173",             // Vite dev server (local)
-  "https://i-love-you-v2.vercel.app"   // Your deployed frontend on Vercel
-];
-
-// ✅ Configure CORS
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
-
+// CORS configuration - remove trailing slash
+app.use(cors({ origin: "https://i-love-you-v2.vercel.app" }));
 app.use(express.json({ limit: "10mb" }));
 
-// ✅ Root route (para hindi "Cannot GET /")
+// Add root endpoint to handle GET requests
 app.get("/", (req, res) => {
-  res.send("🚀 Backend is running! Try POST /send-email");
+  res.status(200).json({ message: "Server is running!" });
 });
 
-// ✅ Health check route
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "Backend is healthy" });
-});
-
-// ✅ Main email-sending endpoint
 app.post("/send-email", async (req, res) => {
   try {
     const { message, score, drawings } = req.body;
@@ -64,20 +41,18 @@ app.post("/send-email", async (req, res) => {
 
     let mailOptions = {
       from: process.env.EMAIL_USER,
-      to: "delacruzorlando776@gmail.com", 
+      to: "delacruzorlando776@gmail.com",
       subject: "Drawings and letter for you",
       text: `${message}\n\n${score}`,
       attachments: attachments,
     };
-
     await transporter.sendMail(mailOptions);
     console.log("Email sent successfully");
-    res.status(200).json({ message: "Email sent successfully" });
+    res.status(200).json();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error sending email" });
   }
 });
 
-// ✅ Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
