@@ -8,7 +8,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "http://localhost:5173" })); // This is for development with Vite. Update this to your frontend domain (e.g., "https://your-frontend-domain.com") if you have deployed it.
+app.use(cors({ origin: "https://i-love-you-v2.vercel.app/" })); // This is for development with Vite. Update this to your frontend domain (e.g., "https://your-frontend-domain.com") if you have deployed it.
 app.use(express.json({ limit: "10mb" }));
 
 app.post("/send-email", async (req, res) => {
